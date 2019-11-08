@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize/types';
+import Sequelize, { Model } from 'sequelize';
 
 class Plan extends Model {
   static init(sequelize) {
