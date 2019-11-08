@@ -30,7 +30,7 @@ class StudentController {
     }
 
     const student = await Student.create(req.body);
-    return res.json({ student });
+    return res.json(student);
   }
 
   async update(req, res) {
@@ -69,12 +69,7 @@ class StudentController {
     }
     const { name, wheigth, height } = await student.update(req.body);
 
-    return res.json({
-      name,
-      email,
-      wheigth,
-      height,
-    });
+    return res.json({ name, email, wheigth, height });
   }
 }
 

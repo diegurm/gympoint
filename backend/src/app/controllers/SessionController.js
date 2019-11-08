@@ -29,11 +29,7 @@ class StoreController {
     const { id, name } = user;
 
     return res.json({
-      user: {
-        id,
-        name,
-        email,
-      },
+      user: { id, name, email },
       token: jwt.sign({ id }, configAuth.secretOrPrivateKey, {
         expiresIn: configAuth.expiresIn,
       }),
