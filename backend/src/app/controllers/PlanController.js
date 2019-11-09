@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+var HttpStatus = require('http-status-codes');
+
 import Plan from '../models/Plan';
 
 class PlanController {
@@ -55,6 +57,17 @@ class PlanController {
     await plan.update(req.body);
 
     res.json(plan);
+  }
+
+  async delete(req, res) {
+    const plan = await Plan.findByPk(req.params.id);
+    if (!plan) {
+      return res.status(400).send({ error: 'Plan not found' });
+    }
+
+    await plan.destroy();
+
+    res.status(204).send();
   }
 }
 
