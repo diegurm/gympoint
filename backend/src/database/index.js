@@ -6,9 +6,7 @@ import Student from '../app/models/Student';
 import Plan from '../app/models/Plan';
 import Enrollment from '../app/models/Enrollment';
 
-
 const models = [User, Student, Plan, Enrollment];
-
 class Database {
   constructor() {
     this.init();
