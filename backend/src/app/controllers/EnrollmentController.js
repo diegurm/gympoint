@@ -7,9 +7,9 @@ import Plan from '../models/Plan';
 class EnrollmentController {
   async store(req, res) {
     const schema = Yup.object().shape({
-      student_id: Yup.number().required(),
-      plan_id: Yup.number().required(),
-      start_date: Yup.date().required(),
+      student_id: Yup.number().required('Student is required'),
+      plan_id: Yup.number().required('Plan is required'),
+      start_date: Yup.date().required('Start date is required'),
     });
 
     if (!(await schema.isValid(req.body))) {
