@@ -1,6 +1,4 @@
 import * as Yup from 'yup';
-var HttpStatus = require('http-status-codes');
-
 import Plan from '../models/Plan';
 
 class PlanController {
@@ -29,7 +27,7 @@ class PlanController {
 
     const plan = await Plan.create(req.body);
 
-    res.json(plan);
+    return res.json(plan);
   }
 
   async update(req, res) {
@@ -56,7 +54,7 @@ class PlanController {
 
     await plan.update(req.body);
 
-    res.json(plan);
+    return res.json(plan);
   }
 
   async delete(req, res) {
@@ -67,7 +65,7 @@ class PlanController {
 
     await plan.destroy();
 
-    res.status(204).send();
+    return res.status(204).send();
   }
 }
 
