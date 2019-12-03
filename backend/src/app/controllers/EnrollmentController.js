@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { parseISO, addDays } from 'date-fns';
+import { format, parseISO, addDays } from 'date-fns';
 
 import Enrollment from '../models/Enrollment';
 import Plan from '../models/Plan';
@@ -42,7 +42,12 @@ class EnrollmentController {
       subject: 'Matrícula Gympoint',
       text: 'Sua matrícula foi finalizada com sucesso',
       template: 'wellcome',
-      context: { student: student.name },
+      context: {
+        student: student.name,
+        start_date: format(new Date(start_date), "dd'/'MM'/'yyyy"),
+        end_date: format(new Date(end_date), "dd'/'MM'/'yyyy"),
+        plan: plan.title,
+      },
     });
 
     return res.json(enrollment);
