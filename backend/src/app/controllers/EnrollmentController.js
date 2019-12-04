@@ -7,6 +7,11 @@ import Student from '../models/Student';
 import Mail from '../../lib/Mail';
 
 class EnrollmentController {
+  async index(req, res) {
+    const enrollments = await Enrollment.findAll();
+    res.json(enrollments);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       student_id: Yup.number().required('Student is required'),
