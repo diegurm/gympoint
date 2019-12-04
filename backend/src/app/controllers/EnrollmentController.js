@@ -60,6 +60,17 @@ class EnrollmentController {
 
     return res.json(enrollment);
   }
+
+  async delete(req, res) {
+    const enrollment = await Enrollment.findByPk(req.params.id);
+    if (!enrollment) {
+      return res.status(400).send({ error: 'Enrollment not found' });
+    }
+
+    await enrollment.destroy();
+
+    return res.status(204).send();
+  }
 }
 
 export default new EnrollmentController();
