@@ -18,6 +18,8 @@ class EnrollmentController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
+    // Validar se a data de inicio coincide com algum periodo ja selecionado anteiormente
+
     const { student_id, plan_id, start_date } = req.body;
 
     const plan = await Plan.findByPk(plan_id);
@@ -46,6 +48,7 @@ class EnrollmentController {
         student: student.name,
         start_date: format(new Date(start_date), "dd'/'MM'/'yyyy"),
         end_date: format(new Date(end_date), "dd'/'MM'/'yyyy"),
+        price: price.toFixed(2),
         plan: plan.title,
       },
     });
