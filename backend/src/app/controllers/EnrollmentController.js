@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { format, parseISO, addDays } from 'date-fns';
+import { format, parseISO, addDays, isPast } from 'date-fns';
 
 import Enrollment from '../models/Enrollment';
 import Plan from '../models/Plan';
@@ -22,19 +22,36 @@ class EnrollmentController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
-
-    // Validar se a data de inicio coincide com algum periodo ja selecionado anteiormente
-
     const { student_id, plan_id, start_date } = req.body;
+
+    if(isPast(parseISO(start_date))){
+      return res.status(400).json({ error: 'Start date has passed' });
+    }
 
     const plan = await Plan.findByPk(plan_id);
     if (!plan) {
       return res.status(400).json({ error: 'Plan does not exist' });
     }
+
     const end_date = addDays(parseISO(start_date), plan.duration * 30);
     const price = plan.price * plan.duration;
 
+    //Validate enrollment
+    // Validar se a data de inicio coincide com algum periodo ja selecionado anteriormente
+    const enrollmentIsValid = await Enrollment.findOne({
+       where: { student_id },
+       order: [['end_date','DESC']]
+     })
+    if(enrollmentIsValid){
+      if(parseISO(start_date) < enrollmentIsValid.end_date){
+        return res.status(400).json({ error: 'Enrollment already exists for selected period' });
+      }
+    }
+
     const student = await Student.findByPk(student_id);
+    if(!student){
+      return res.status(400).json({ error: 'Student does not exist' });
+    }
 
     const enrollment = await Enrollment.create({
       student_id,
