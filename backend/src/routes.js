@@ -5,11 +5,14 @@ import StoreController from './app/controllers/SessionController';
 import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import EnrollmentController from './app/controllers/EnrollmentController';
+import CheckinController from './app/controllers/CheckinController';
 
 const routes = new Router();
 
 routes.get('/', (req, res) => res.json({ message: 'Gympoint' }));
 routes.post('/sessions', StoreController.store);
+
+routes.post('/students/:id/checkins', CheckinController.store);
 
 routes.use(authMiddleware);
 

@@ -121,11 +121,11 @@ class EnrollmentController {
       return res.status(400).json({ error: 'Plan does not exist' });
     }
     const end_date =
-      start_date != enrollment.start_date
+      start_date !== enrollment.start_date
         ? addDays(parseISO(start_date), plan.duration * 30)
         : enrollment.start_date;
     const price =
-      end_date != enrollment.end_date
+      end_date !== enrollment.end_date
         ? plan.price * plan.duration
         : enrollment.price;
 
