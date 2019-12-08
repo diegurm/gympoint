@@ -8,7 +8,21 @@ import Mail from '../../lib/Mail';
 
 class EnrollmentController {
   async index(req, res) {
-    const enrollments = await Enrollment.findAll();
+    const enrollments = await Enrollment.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name', 'email'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title', 'duration', 'price'],
+        },
+      ],
+    });
     res.json(enrollments);
   }
 
@@ -24,7 +38,7 @@ class EnrollmentController {
     }
     const { student_id, plan_id, start_date } = req.body;
 
-    if(isPast(parseISO(start_date))){
+    if (isPast(parseISO(start_date))) {
       return res.status(400).json({ error: 'Start date has passed' });
     }
 
@@ -36,20 +50,22 @@ class EnrollmentController {
     const end_date = addDays(parseISO(start_date), plan.duration * 30);
     const price = plan.price * plan.duration;
 
-    //Validate enrollment
+    // Validate enrollment
     // Validar se a data de inicio coincide com algum periodo ja selecionado anteriormente
     const enrollmentIsValid = await Enrollment.findOne({
-       where: { student_id },
-       order: [['end_date','DESC']]
-     })
-    if(enrollmentIsValid){
-      if(parseISO(start_date) < enrollmentIsValid.end_date){
-        return res.status(400).json({ error: 'Enrollment already exists for selected period' });
+      where: { student_id },
+      order: [['end_date', 'DESC']],
+    });
+    if (enrollmentIsValid) {
+      if (parseISO(start_date) < enrollmentIsValid.end_date) {
+        return res
+          .status(400)
+          .json({ error: 'Enrollment already exists for selected period' });
       }
     }
 
     const student = await Student.findByPk(student_id);
-    if(!student){
+    if (!student) {
       return res.status(400).json({ error: 'Student does not exist' });
     }
 
@@ -91,7 +107,7 @@ class EnrollmentController {
     const { id } = req.params;
     const { student_id, plan_id, start_date } = req.body;
 
-    if(isPast(parseISO(start_date))){
+    if (isPast(parseISO(start_date))) {
       return res.status(400).json({ error: 'Start date has passed' });
     }
 
@@ -104,19 +120,26 @@ class EnrollmentController {
     if (!plan) {
       return res.status(400).json({ error: 'Plan does not exist' });
     }
-    const end_date = start_date != enrollment.start_date ? addDays(parseISO(start_date), plan.duration * 30) : enrollment.start_date;
-    const price = end_date != enrollment.end_date ? plan.price * plan.duration : enrollment.price;
+    const end_date =
+      start_date != enrollment.start_date
+        ? addDays(parseISO(start_date), plan.duration * 30)
+        : enrollment.start_date;
+    const price =
+      end_date != enrollment.end_date
+        ? plan.price * plan.duration
+        : enrollment.price;
 
-
-    //Validate enrollment
+    // Validate enrollment
     // Validar se a data de inicio coincide com algum periodo ja selecionado anteriormente
     const enrollmentIsValid = await Enrollment.findOne({
       where: { student_id },
-      order: [['end_date','DESC']]
-    })
-    if(enrollmentIsValid && enrollmentIsValid.id !== id){
-      if(parseISO(start_date) < enrollmentIsValid.end_date){
-        return res.status(400).json({ error: 'Enrollment already exists for selected period' });
+      order: [['end_date', 'DESC']],
+    });
+    if (enrollmentIsValid && enrollmentIsValid.id !== id) {
+      if (parseISO(start_date) < enrollmentIsValid.end_date) {
+        return res
+          .status(400)
+          .json({ error: 'Enrollment already exists for selected period' });
       }
     }
     await enrollment.update({
