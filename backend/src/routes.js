@@ -12,6 +12,7 @@ const routes = new Router();
 routes.get('/', (req, res) => res.json({ message: 'Gympoint' }));
 routes.post('/sessions', StoreController.store);
 
+routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/checkins', CheckinController.store);
 
 routes.use(authMiddleware);
