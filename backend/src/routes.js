@@ -13,24 +13,27 @@ const routes = new Router();
 routes.get('/', (req, res) => res.json({ message: 'Gympoint' }));
 routes.post('/sessions', StoreController.store);
 
-routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/checkins', CheckinController.store);
+routes.get('/students/:id/checkins', CheckinController.index);
 
 routes.post('/students/:id/help-orders', HelpOrderController.store);
+routes.get('/students/:id/help-orders', HelpOrderController.index);
 
 routes.use(authMiddleware);
 
 routes.post('/students', StudentController.store);
 routes.put('/students/:id', StudentController.update);
 
-routes.get('/plans', PlanController.index);
 routes.post('/plans', PlanController.store);
+routes.get('/plans', PlanController.index);
 routes.put('/plans/:id', PlanController.update);
 routes.delete('/plans/:id', PlanController.delete);
 
-routes.get('/enrollments', EnrollmentController.index);
 routes.post('/enrollments', EnrollmentController.store);
+routes.get('/enrollments', EnrollmentController.index);
 routes.put('/enrollments/:id', EnrollmentController.update);
 routes.delete('/enrollments/:id', EnrollmentController.delete);
+
+// routes.post('help-orders/:id/answer', AnswerController.store);
 
 export default routes;

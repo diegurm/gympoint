@@ -28,6 +28,31 @@ class HelpOrderController {
 
     return res.json(helpOrder);
   }
+
+  async index(req, res) {
+    const { id } = req.params;
+
+    const student = await Student.findByPk(id);
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exist' });
+    }
+
+    const helpOrders = await HelpOrder.findAll({
+      where: {
+        student_id: id,
+      },
+      attributes: ['question', 'created_at'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
+
+    return res.json(helpOrders);
+  }
 }
 
 export default new HelpOrderController();
