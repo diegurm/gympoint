@@ -7,25 +7,6 @@ import Student from '../models/Student';
 import Mail from '../../lib/Mail';
 
 class EnrollmentController {
-  async index(req, res) {
-    const enrollments = await Enrollment.findAll({
-      attributes: ['id', 'start_date', 'end_date', 'price'],
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email'],
-        },
-        {
-          model: Plan,
-          as: 'plan',
-          attributes: ['id', 'title', 'duration', 'price'],
-        },
-      ],
-    });
-    res.json(enrollments);
-  }
-
   async store(req, res) {
     const schema = Yup.object().shape({
       student_id: Yup.number().required('Student is required'),
@@ -92,6 +73,25 @@ class EnrollmentController {
     });
 
     return res.json(enrollment);
+  }
+
+  async index(req, res) {
+    const enrollments = await Enrollment.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['id', 'name', 'email'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['id', 'title', 'duration', 'price'],
+        },
+      ],
+    });
+    res.json(enrollments);
   }
 
   async update(req, res) {

@@ -6,6 +6,7 @@ import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import EnrollmentController from './app/controllers/EnrollmentController';
 import CheckinController from './app/controllers/CheckinController';
+import HelpOrderController from './app/controllers/HelpOrderController';
 
 const routes = new Router();
 
@@ -14,6 +15,8 @@ routes.post('/sessions', StoreController.store);
 
 routes.get('/students/:id/checkins', CheckinController.index);
 routes.post('/students/:id/checkins', CheckinController.store);
+
+routes.post('/students/:id/help-orders', HelpOrderController.store);
 
 routes.use(authMiddleware);
 

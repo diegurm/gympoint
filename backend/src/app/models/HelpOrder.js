@@ -5,8 +5,8 @@ class HelpOrder extends Model {
     super.init(
       {
         student_id: DataTypes.INTEGER,
-        answer: DataTypes.STRING,
         question: DataTypes.STRING,
+        answer: DataTypes.STRING,
         answer_at: DataTypes.DATE,
       },
       { sequelize },
