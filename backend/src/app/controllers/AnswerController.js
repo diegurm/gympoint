@@ -1,7 +1,9 @@
 import * as Yup from 'yup';
+import { format } from 'date-fns';
 
 import Student from '../models/Student';
 import HelpOrder from '../models/HelpOrder';
+import Mail from '../../lib/Mail';
 
 class AnswerController {
   async store(req, res) {
@@ -28,6 +30,19 @@ class AnswerController {
     const { question, answer_at } = await helpOrder.update({
       answer,
       answer_at: new Date(),
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Pedido de aujda - Gympoint',
+      text: 'Você tem uma resposta ao pedido de aujda ',
+      template: 'answer',
+      context: {
+        student: student.name,
+        question,
+        answer,
+        answer_at: format(new Date(answer_at), "dd'/'MM'/'yyyy hh':'mm':'ss"),
+      },
     });
 
     return res.json({ question, answer, answer_at, student });
